@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "pouchdb-drive",
+  "private_key_id": "d4c3beced48901895cbf4943338f8ae90aad6745",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCtzNUpmU2bWBUF\ny/8Xz6PpaMPaz48G7ynOFEsbDUY0c/qD1fCbNUbyj5Wnvd5sn86Tp/2qyrEjk/PC\nRsympeYxTmKF1cABvINuLQiu+uQwDmutxgvCGaqjQbjhuWxq9d4ytgGJZBGzoNek\nOvBMQkb6ClxSzEEyEih34n0OLgOmp6lZIZPuP/YfHETpBo6+cX9l854caFo/edmD\nSoPcjsjc/v0fyUYStfiQAVuOuMDwdSzoISp6y0phqcSv+wYibzCX924o+n3AuYcE\nbtx2HwLNCGPUs8Yn+zZfAORK1j0DEfMloXuX+IJjuMcTG3gBOfyOZlUqiculTslv\n88A7FEEDAgMBAAECggEATU8wArEOtGsZ7tovPog+gTT46fwpwwvfrKuaPQ5KjEqK\nxNoFjQTF6l+0UklDB06OtV+klrRS12CYrXKQ1hA1tPkJGj9aiWsxi3C8zBkOJ9JC\nU6ok0NJZ9QTnGIFCmNGFZUlQpay9swl44rTU7xcMO20gZDQ3S+6H0cwNlKEjPp3Y\nSGZYE72kxANQIQ3zRxc8dS1GGMHHeKz2sB1cEEVWU8ocSj0klUWP6CHAGrfTT9E9\nPFj+DL2NIdHHdo2MVZo43+VKcoSeE1lP02iULslIlMSE+Ng0IjlLcPVMn8VQTQmA\nJCwWl+JOfS63fEQ9mYQLXoO1KGSTt4RNpj+y8GO0AQKBgQDzJ64olT8fBifAZDtw\nie12X3aUCLS6IUoRnZlZPLELcedKi7BsEao0eRSQs7QoRCADLLseR+dJXrNaLyUx\npI4g48Qumf3QohenqkTb9i5qQnFympnPnDkfjMsrduPWvXLDsF5auV1ucKOXkUFA\nXBvafIkhoaKG4AGeMWFqaXCS8wKBgQC2+zpewRE0YNKenUIWbt+dAjAVi5+r+BIj\n0CjFD2ov2YaOJkemauXIvxhGz9kymXcM8x/YKV/7rYuM/osOWiIg5ayNwE/9jxyl\nWjsTryv2+lEGm1sLG8xd05u/8vtALKqXT8fPn3De19luE3P7z0E3Z3CPCakzGfSa\n/mJXpQp9sQKBgQCCs+Wt8uvHJWvgwwAgckOuyYnX8QYUtyg1Z92yVilk2YlWTNg8\nfxJaumsPjUleC6CZlEXQ9R2iFsGZzJXVpXqwuz4NPsFskHTer2vsQNyaSbTpwajE\nLFmYV/ouFu5J0/QItJlDcziB0RJeurm0es6OFzsvVM8kaOz1t92BccQNeQKBgQCC\nrw7TGaSF+hiyu7G1f94orqVU3fFdysB533MeupGmNv9IisJlcrdGFmTqPgvrfXtv\nPjyiD3rDrwCZ5DnAOFNjl2UToCQA/bMBzV2gA12s+L3hsBbn6iSdZkI4ZvtWrA/y\nHUKhYEgmf5aEbVRKpYz4WuIi5k13d7Qg9kmaOv8xIQKBgQCpzIwYTg7L6kT66Lk2\n5NT0MTU4DGIoL3RM3YLz6Lz5wSSn/B9kIy45oeWIFsCOOr5fhQeVWtj3zDT957/I\nkniFHTFj6VQt0V3E/nAfq1m8Q56KdoyL2Rralbz7P4VFVfRTwXpTJSmx4wLbP+mg\nr1XSBxoarbIEltEnJZX3B0wjaw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "drive-926@pouchdb-drive.iam.gserviceaccount.com",
+  "client_id": "102210764797990445395",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/drive-926%40pouchdb-drive.iam.gserviceaccount.com"
+}
