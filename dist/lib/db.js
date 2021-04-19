@@ -86,36 +86,37 @@ var DB = /** @class */ (function () {
                         col.rev = r.rev;
                         debouncedUpload = lodash_1.debounce(function () { return __awaiter(_this, void 0, void 0, function () {
                             var meta, json, response;
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
+                            var _a;
+                            return __generator(this, function (_b) {
+                                switch (_b.label) {
                                     case 0: return [4 /*yield*/, this.drive.getMeta(name)];
                                     case 1:
-                                        meta = _a.sent();
-                                        if (!(meta.properties.rev && col.rev !== meta.properties.rev)) return [3 /*break*/, 4];
+                                        meta = _b.sent();
+                                        if (!(((_a = meta.properties) === null || _a === void 0 ? void 0 : _a.rev) && col.rev !== meta.properties.rev)) return [3 /*break*/, 4];
                                         return [4 /*yield*/, this.drive.getFileData(meta.id)];
                                     case 2:
-                                        json = _a.sent();
+                                        json = _b.sent();
                                         changes.cancel();
                                         return [4 /*yield*/, col.bulkDocs(json, {
                                                 new_edits: false
                                             })];
                                     case 3:
-                                        _a.sent();
+                                        _b.sent();
                                         changes.on("change", debouncedUpload);
-                                        _a.label = 4;
+                                        _b.label = 4;
                                     case 4: return [4 /*yield*/, col.allDocs({
                                             include_docs: true,
                                             attachments: true
                                         })];
                                     case 5:
-                                        response = _a.sent();
+                                        response = _b.sent();
                                         col.rev = this.drive.getRev();
                                         return [4 /*yield*/, this.drive.setJSON(meta.id, {
                                                 json: response.rows.map(function (r) { return r.doc; }),
                                                 rev: col.rev
                                             })];
                                     case 6:
-                                        _a.sent();
+                                        _b.sent();
                                         return [2 /*return*/];
                                 }
                             });

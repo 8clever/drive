@@ -34,7 +34,7 @@ export class DB {
       const meta = await this.drive.getMeta(name);
       
       // check data revision in drive
-      if (meta.properties.rev && col.rev !== meta.properties.rev) {
+      if (meta.properties?.rev && col.rev !== meta.properties.rev) {
         const json = await this.drive.getFileData(meta.id);
         changes.cancel();
         await col.bulkDocs(json, {
