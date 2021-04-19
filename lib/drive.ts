@@ -1,9 +1,16 @@
 import { google, drive_v3 } from "googleapis";
 import * as path from "path";
 import * as jsonpack from "jsonpack";
+import { reverse } from "lodash";
 
 export interface DriveOptions {
   folderName: string;
+}
+
+interface JsonRev {
+  rev: string;
+  json: any;
+  action?: string;
 }
 
 const auth = new google.auth.GoogleAuth({
@@ -83,66 +90,90 @@ export class Drive {
     return;
   }
 
-  setJSON = async (fileName: string, json: any) => {
-    const list = await this.search({
-      q: `name='${fileName}' and '${this.folderId}' in parents`,
-    });
-
-    const fileId = list[0]?.id;
-    if (!fileId) {
-      throw new Error (`Collection not exists: ${fileName}`);
-    }
-
-    await this.drive.files.update({
+  setJSON = async (fileId: string, rev: JsonRev) => {
+    return this.drive.files.update({
       fileId,
+      requestBody: {
+        properties: {
+          rev: rev.rev
+        }
+      },
       media: {
         mimeType: this.mimeType.text,
-        body: Drive.Stringify(json)
+        body: Drive.Stringify(rev.json)
       }
     });
   }
 
-  getJSON = async (fileName: string) => {
+  getRev = () => {
+    return new Date().valueOf().toString();
+  }
+
+  getMeta = async (name: string) => {
+    const list = await this.search({
+      q: `name='${name}' and '${this.folderId}' in parents`,
+      fields: "files(id,properties)"
+    });
+    const file = list[0];
+    return file;
+  }
+
+  getFileData = async (fileId: string) => {
+    const data = await this.drive.files.export({
+      fileId,
+      mimeType: this.mimeType.text
+    });
+    return Drive.Parse(String(data.data).trim()) as any;
+  }
+
+  getJSON = async (fileName: string): Promise<JsonRev> => {
     await this.pickFolderId()
 
-    // check file
-    const list = await this.search({
-      q: `name='${fileName}' and '${this.folderId}' in parents`,
-    });
+    const file = await this.getMeta(fileName);
 
-    const fileId = list[0]?.id;
-    
+    const fileId = file.id;
+
     // get json from file
     if (fileId) {
-      const data = await this.drive.files.export({
-        fileId,
-        mimeType: this.mimeType.text
-      });
 
       try {
-        const json = Drive.Parse(String(data.data).trim()) as any;
-        return json;
+        const json = await this.getFileData(fileId);
+        return {
+          rev: file.properties?.rev ?? this.getRev(),
+          json
+        };
       } catch (e) {
-        console.error(e.message);
-        return [];
+        return {
+          action: e.message,
+          rev: this.getRev(),
+          json: []
+        };
       }
     }
 
-    // create file
+    const rev = this.getRev();
     await this.drive.files.create({
       requestBody: {
         name: fileName,
         mimeType: this.mimeType.file,
         parents: [
           this.folderId
-        ]
+        ],
+        properties: {
+          rev
+        }
       },
       media: {
         mimeType: this.mimeType.text,
         body: Drive.Stringify([])
       }
     });
-    return [];
+
+    return {
+      action: `Create file: ${name}`,
+      rev,
+      json: []
+    };
   }
 
   

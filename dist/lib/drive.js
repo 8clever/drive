@@ -118,84 +118,109 @@ var Drive = /** @class */ (function () {
                 }
             });
         }); };
-        this.setJSON = function (fileName, json) { return __awaiter(_this, void 0, void 0, function () {
-            var list, fileId;
-            var _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+        this.setJSON = function (fileId, rev) { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.drive.files.update({
+                        fileId: fileId,
+                        requestBody: {
+                            properties: {
+                                rev: rev.rev
+                            }
+                        },
+                        media: {
+                            mimeType: this.mimeType.text,
+                            body: Drive.Stringify(rev.json)
+                        }
+                    })];
+            });
+        }); };
+        this.getRev = function () {
+            return new Date().valueOf().toString();
+        };
+        this.getMeta = function (name) { return __awaiter(_this, void 0, void 0, function () {
+            var list, file;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0: return [4 /*yield*/, this.search({
-                            q: "name='" + fileName + "' and '" + this.folderId + "' in parents"
+                            q: "name='" + name + "' and '" + this.folderId + "' in parents",
+                            fields: "files(id,properties)"
                         })];
                     case 1:
-                        list = _b.sent();
-                        fileId = (_a = list[0]) === null || _a === void 0 ? void 0 : _a.id;
-                        if (!fileId) {
-                            throw new Error("Collection not exists: " + fileName);
-                        }
-                        return [4 /*yield*/, this.drive.files.update({
-                                fileId: fileId,
-                                media: {
-                                    mimeType: this.mimeType.text,
-                                    body: Drive.Stringify(json)
-                                }
-                            })];
-                    case 2:
-                        _b.sent();
-                        return [2 /*return*/];
+                        list = _a.sent();
+                        file = list[0];
+                        return [2 /*return*/, file];
+                }
+            });
+        }); };
+        this.getFileData = function (fileId) { return __awaiter(_this, void 0, void 0, function () {
+            var data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.drive.files["export"]({
+                            fileId: fileId,
+                            mimeType: this.mimeType.text
+                        })];
+                    case 1:
+                        data = _a.sent();
+                        return [2 /*return*/, Drive.Parse(String(data.data).trim())];
                 }
             });
         }); };
         this.getJSON = function (fileName) { return __awaiter(_this, void 0, void 0, function () {
-            var list, fileId, data, json;
-            var _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0: return [4 /*yield*/, this.pickFolderId()
-                        // check file
-                    ];
+            var file, fileId, json, e_1, rev;
+            var _a, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0: return [4 /*yield*/, this.pickFolderId()];
                     case 1:
-                        _b.sent();
-                        return [4 /*yield*/, this.search({
-                                q: "name='" + fileName + "' and '" + this.folderId + "' in parents"
-                            })];
+                        _c.sent();
+                        return [4 /*yield*/, this.getMeta(fileName)];
                     case 2:
-                        list = _b.sent();
-                        fileId = (_a = list[0]) === null || _a === void 0 ? void 0 : _a.id;
-                        if (!fileId) return [3 /*break*/, 4];
-                        return [4 /*yield*/, this.drive.files["export"]({
-                                fileId: fileId,
-                                mimeType: this.mimeType.text
-                            })];
+                        file = _c.sent();
+                        fileId = file.id;
+                        if (!fileId) return [3 /*break*/, 6];
+                        _c.label = 3;
                     case 3:
-                        data = _b.sent();
-                        try {
-                            json = Drive.Parse(String(data.data).trim());
-                            return [2 /*return*/, json];
-                        }
-                        catch (e) {
-                            console.error(e.message);
-                            return [2 /*return*/, []];
-                        }
-                        _b.label = 4;
-                    case 4: 
-                    // create file
-                    return [4 /*yield*/, this.drive.files.create({
-                            requestBody: {
-                                name: fileName,
-                                mimeType: this.mimeType.file,
-                                parents: [
-                                    this.folderId
-                                ]
-                            },
-                            media: {
-                                mimeType: this.mimeType.text,
-                                body: Drive.Stringify([])
-                            }
-                        })];
+                        _c.trys.push([3, 5, , 6]);
+                        return [4 /*yield*/, this.getFileData(fileId)];
+                    case 4:
+                        json = _c.sent();
+                        return [2 /*return*/, {
+                                rev: (_b = (_a = file.properties) === null || _a === void 0 ? void 0 : _a.rev) !== null && _b !== void 0 ? _b : this.getRev(),
+                                json: json
+                            }];
                     case 5:
-                        // create file
-                        _b.sent();
-                        return [2 /*return*/, []];
+                        e_1 = _c.sent();
+                        return [2 /*return*/, {
+                                action: e_1.message,
+                                rev: this.getRev(),
+                                json: []
+                            }];
+                    case 6:
+                        rev = this.getRev();
+                        return [4 /*yield*/, this.drive.files.create({
+                                requestBody: {
+                                    name: fileName,
+                                    mimeType: this.mimeType.file,
+                                    parents: [
+                                        this.folderId
+                                    ],
+                                    properties: {
+                                        rev: rev
+                                    }
+                                },
+                                media: {
+                                    mimeType: this.mimeType.text,
+                                    body: Drive.Stringify([])
+                                }
+                            })];
+                    case 7:
+                        _c.sent();
+                        return [2 /*return*/, {
+                                action: "Create file: " + name,
+                                rev: rev,
+                                json: []
+                            }];
                 }
             });
         }); };

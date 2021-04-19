@@ -1,4 +1,19 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -43,6 +58,13 @@ var lodash_1 = require("lodash");
 PouchDB
     .plugin(require("pouchdb-find"))
     .plugin(require("pouchdb-adapter-memory"));
+var Collection = /** @class */ (function (_super) {
+    __extends(Collection, _super);
+    function Collection() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return Collection;
+}(PouchDB));
 var DB = /** @class */ (function () {
     function DB(options) {
         this.drive = new drive_1.Drive({
@@ -51,43 +73,60 @@ var DB = /** @class */ (function () {
     }
     DB.prototype.collection = function (name) {
         return __awaiter(this, void 0, void 0, function () {
-            var json, col, debouncedUpload;
+            var r, col, debouncedUpload, changes;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        console.time(name);
-                        return [4 /*yield*/, this.drive.getJSON(name)];
+                    case 0: return [4 /*yield*/, this.drive.getJSON(name)];
                     case 1:
-                        json = _a.sent();
-                        col = new PouchDB(name, { adapter: "memory" });
+                        r = _a.sent();
+                        col = new Collection(name, { adapter: "memory" });
+                        col.rev = r.rev;
                         debouncedUpload = lodash_1.debounce(function () { return __awaiter(_this, void 0, void 0, function () {
-                            var response, data;
+                            var meta, json, response;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, col.allDocs({
+                                    case 0: return [4 /*yield*/, this.drive.getMeta(name)];
+                                    case 1:
+                                        meta = _a.sent();
+                                        if (!(meta.properties.rev && col.rev !== meta.properties.rev)) return [3 /*break*/, 4];
+                                        return [4 /*yield*/, this.drive.getFileData(meta.id)];
+                                    case 2:
+                                        json = _a.sent();
+                                        changes.cancel();
+                                        return [4 /*yield*/, col.bulkDocs(json, {
+                                                new_edits: false
+                                            })];
+                                    case 3:
+                                        _a.sent();
+                                        changes.on("change", debouncedUpload);
+                                        _a.label = 4;
+                                    case 4: return [4 /*yield*/, col.allDocs({
                                             include_docs: true,
                                             attachments: true
                                         })];
-                                    case 1:
+                                    case 5:
                                         response = _a.sent();
-                                        data = response.rows.map(function (r) {
-                                            delete r.doc._rev;
-                                            return r.doc;
-                                        });
-                                        return [4 /*yield*/, this.drive.setJSON(name, data)];
-                                    case 2:
+                                        col.rev = this.drive.getRev();
+                                        return [4 /*yield*/, this.drive.setJSON(meta.id, {
+                                                json: response.rows.map(function (r) { return r.doc; }),
+                                                rev: col.rev
+                                            })];
+                                    case 6:
                                         _a.sent();
                                         return [2 /*return*/];
                                 }
                             });
                         }); }, 3000);
-                        return [4 /*yield*/, col.bulkDocs(json)];
+                        return [4 /*yield*/, col.bulkDocs(r.json, {
+                                new_edits: false
+                            })];
                     case 2:
                         _a.sent();
-                        col.changes({
+                        changes = col.changes({
                             live: true
-                        }).on("change", debouncedUpload);
+                        });
+                        changes.on("change", debouncedUpload);
                         console.timeEnd(name);
                         return [2 /*return*/, col];
                 }
