@@ -169,11 +169,11 @@ var Drive = /** @class */ (function () {
                     case 3:
                         data = _b.sent();
                         try {
-                            json = Drive.Parse(data.data);
+                            json = Drive.Parse(String(data.data).trim());
                             return [2 /*return*/, json];
                         }
                         catch (e) {
-                            console.error(e);
+                            console.error(e.message);
                             return [2 /*return*/, []];
                         }
                         _b.label = 4;

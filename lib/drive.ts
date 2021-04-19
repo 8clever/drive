@@ -120,10 +120,10 @@ export class Drive {
       });
 
       try {
-        const json = Drive.Parse(data.data as any) as any;
+        const json = Drive.Parse(String(data.data).trim()) as any;
         return json;
       } catch (e) {
-        console.error(e);
+        console.error(e.message);
         return [];
       }
     }
