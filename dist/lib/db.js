@@ -77,7 +77,9 @@ var DB = /** @class */ (function () {
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.drive.getJSON(name)];
+                    case 0:
+                        console.time(name);
+                        return [4 /*yield*/, this.drive.getJSON(name)];
                     case 1:
                         r = _a.sent();
                         col = new Collection(name, { adapter: "memory" });
@@ -118,11 +120,14 @@ var DB = /** @class */ (function () {
                                 }
                             });
                         }); }, 3000);
+                        if (!r.json.length) return [3 /*break*/, 3];
                         return [4 /*yield*/, col.bulkDocs(r.json, {
-                                new_edits: false
+                                new_edits: !r.json[0]._rev
                             })];
                     case 2:
                         _a.sent();
+                        _a.label = 3;
+                    case 3:
                         changes = col.changes({
                             live: true
                         });

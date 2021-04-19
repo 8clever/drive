@@ -25,6 +25,7 @@ export class DB {
   drive: Drive;
 
   async collection<T> (name: string) {
+    console.time(name);
     const r = await this.drive.getJSON(name);
     const col = new Collection<T>(name, { adapter: "memory" });
     col.rev = r.rev;
@@ -54,9 +55,11 @@ export class DB {
       });
     }, 3000);
 
-    await col.bulkDocs(r.json, {
-      new_edits: false
-    });
+    if (r.json.length) {
+      await col.bulkDocs(r.json, {
+        new_edits: !r.json[0]._rev
+      });  
+    }
 
     const changes = col.changes({
       live: true
