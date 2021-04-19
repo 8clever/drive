@@ -21,6 +21,7 @@ export class DB {
   drive: Drive;
 
   async collection<T> (name: string) {
+    console.time(name);
     const json = await this.drive.getJSON(name);
 
     const col = new PouchDB<T>(name, { adapter: "memory" });
@@ -43,6 +44,7 @@ export class DB {
       live: true
     }).on("change", debouncedUpload);
     
+    console.timeEnd(name);
     return col;
   }
 
