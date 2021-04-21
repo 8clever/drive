@@ -50,12 +50,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 exports.__esModule = true;
 exports.DB = void 0;
-var PouchDB = require("pouchdb");
+var pouchdb_1 = __importDefault(require("pouchdb"));
 var drive_1 = require("./drive");
 var lodash_1 = require("lodash");
-PouchDB
+pouchdb_1["default"]
     .plugin(require("pouchdb-find"))
     .plugin(require("pouchdb-adapter-memory"));
 var Collection = /** @class */ (function (_super) {
@@ -64,7 +67,7 @@ var Collection = /** @class */ (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     return Collection;
-}(PouchDB));
+}(pouchdb_1["default"]));
 var DB = /** @class */ (function () {
     function DB(options) {
         this.drive = new drive_1.Drive({
