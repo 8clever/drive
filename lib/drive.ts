@@ -1,7 +1,22 @@
 import { google, drive_v3 } from "googleapis";
 import * as path from "path";
 import * as jsonpack from "jsonpack";
-import { reverse } from "lodash";
+import * as env from "dotenv";
+import fs from "fs";
+import os from "os";
+import Cryptr from "cryptr";
+
+const config = env.config();
+
+const certCryptr = fs.readFileSync(path.resolve(__dirname, "../drive.auth.cryptr")).toString();
+
+const cryptr = new Cryptr(config.parsed?.SECRET);
+
+const cert = cryptr.decrypt(certCryptr);
+
+const pathCert = os.tmpdir() + "/cert.json"; 
+
+fs.writeFileSync(pathCert, cert);
 
 export interface DriveOptions {
   folderName: string;
@@ -14,7 +29,7 @@ interface JsonRev {
 }
 
 const auth = new google.auth.GoogleAuth({
-  keyFile: path.resolve(__dirname, "../drive.auth.json"),
+  keyFile: pathCert,
   scopes: [
     "https://www.googleapis.com/auth/drive",
     "https://www.googleapis.com/auth/drive.file",

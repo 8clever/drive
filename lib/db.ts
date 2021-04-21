@@ -1,4 +1,4 @@
-import * as PouchDB from "pouchdb";
+import PouchDB from "pouchdb";
 import { Drive } from "./drive";
 import { debounce } from "lodash";
 
