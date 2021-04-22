@@ -1,20 +1,19 @@
 import { google, drive_v3 } from "googleapis";
-import * as path from "path";
 import * as jsonpack from "jsonpack";
 import * as env from "dotenv";
 import fs from "fs";
 import os from "os";
-import Cryptr from "cryptr";
+import { Buffer } from "buffer";
 
-const config = env.config();
+env.config();
 
-const certCryptr = fs.readFileSync(path.resolve(__dirname, "../drive.auth.cryptr")).toString();
+const serviceKey = process.env.SERVICE_KEY;
 
-const cryptr = new Cryptr(config.parsed?.SECRET);
+if (!serviceKey) throw new Error("SERVICE_KEY is required env variable");
 
-const cert = cryptr.decrypt(certCryptr);
+const cert = Buffer.from(serviceKey, "hex");
 
-const pathCert = os.tmpdir() + "/cert.json"; 
+const pathCert = os.tmpdir() + "/cert.json";
 
 fs.writeFileSync(pathCert, cert);
 

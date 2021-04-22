@@ -5,24 +5,21 @@
   "main": "index.js",
   "scripts": {
     "test": "ts-node test.ts",
-    "build": "tsc && cp drive.auth.cryptr ./dist"
+    "build": "tsc"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@googleapis/drive": "^0.3.0",
-    "cryptr": "^6.0.2",
     "dotenv": "^8.2.0",
     "googleapis": "^71.0.0",
     "jsonpack": "^1.1.5",
     "lodash": "^4.17.21",
     "pouchdb": "^7.2.2",
     "pouchdb-adapter-memory": "^7.2.2",
-    "pouchdb-find": "^7.2.2",
-    "pouchdb-json": "7.2.2"
+    "pouchdb-find": "^7.2.2"
   },
   "devDependencies": {
-    "@types/cryptr": "^4.0.1",
     "@types/jsonpack": "^1.1.0",
     "@types/lodash": "^4.14.168",
     "@types/node": "^14.14.35",

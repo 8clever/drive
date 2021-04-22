@@ -57,20 +57,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a;
 exports.__esModule = true;
 exports.Drive = void 0;
 var googleapis_1 = require("googleapis");
-var path = __importStar(require("path"));
 var jsonpack = __importStar(require("jsonpack"));
 var env = __importStar(require("dotenv"));
 var fs_1 = __importDefault(require("fs"));
 var os_1 = __importDefault(require("os"));
-var cryptr_1 = __importDefault(require("cryptr"));
-var config = env.config();
-var certCryptr = fs_1["default"].readFileSync(path.resolve(__dirname, "../drive.auth.cryptr")).toString();
-var cryptr = new cryptr_1["default"]((_a = config.parsed) === null || _a === void 0 ? void 0 : _a.SECRET);
-var cert = cryptr.decrypt(certCryptr);
+var buffer_1 = require("buffer");
+env.config();
+var serviceKey = process.env.SERVICE_KEY;
+if (!serviceKey)
+    throw new Error("SERVICE_KEY is required env variable");
+var cert = buffer_1.Buffer.from(serviceKey, "hex");
 var pathCert = os_1["default"].tmpdir() + "/cert.json";
 fs_1["default"].writeFileSync(pathCert, cert);
 var auth = new googleapis_1.google.auth.GoogleAuth({
