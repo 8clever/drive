@@ -7,6 +7,9 @@
     "test": "ts-node test.ts",
     "build": "tsc"
   },
+  "bin": {
+    "convert-service-key": "dist/lib/convert"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
