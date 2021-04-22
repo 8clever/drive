@@ -8,7 +8,7 @@
     "build": "tsc"
   },
   "bin": {
-    "convert-service-key": "dist/lib/convert"
+    "convert-service-key": "./dist/lib/convert.js"
   },
   "author": "",
   "license": "ISC",
